@@ -76,9 +76,9 @@ class AdminController extends Controller
         return view('admin.showdoctor', compact('data'));
     }
 
-    public function deletedoctor()
+    public function deletedoctor($id)
     {
-        $data=doctor::find();
+        $data=doctor::find($id);
 
         $data->delete();
 
@@ -87,40 +87,33 @@ class AdminController extends Controller
 
     public function updatedoctor($id)
     {
-        $data= doctor::find($id);
-
+        $data=doctor::find($id);
         return view('admin.update_doctor', compact('data'));
     }
 
     public function editdoctor(Request $request, $id)
     {
-        $doctor = doctor::find($id);
-
+        $doctor=doctor::find($id);
         $doctor->name=$request->name;
-
         $doctor->phone=$request->phone;
-
         $doctor->speciality=$request->speciality;
-
         $doctor->room=$request->room;
-
-        $doctor->name=$request->name;
-
+        
         $image=$request->file;
-
         if($image)
         {
-        $imagename=time().'.'.$image->getOriginalClientExtension();
+
+        
+        $imagename=time().'.'.$image->getClientOriginalExtension();
 
         $request->file->move('doctorimage',$imagename);
 
         $doctor->image=$imagename;
         }
-
         $doctor->save();
-        return redirect()->back();
 
-
+        return redirect()->back()->with('message','Doctor details updated Successfully');
     }
     
+
 }
